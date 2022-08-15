@@ -4,29 +4,29 @@
 
 
 <head>
-  <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
- 
-     <style>
-         #spinner   {  
-            
-             animation: spin 1s linear infinite;
-             color:red;
-         }
-           
-         @keyframes spin {
-             100% {
-                 transform: rotate(360deg);
-             }
-         }
- .inline{
-     display: flex;
- }
- .spinner i{
-     margin-top: 10px;
-     margin-left: 50px;
- }
-     </style>
- </head>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"></script>
+  <script>
+      $(document).ready(function(){
+          $('#login_form').submit(function() {
+              $('#loaderIcon').css('visibility', 'visible');
+              $('#loaderIcon').show();
+          });
+      })
+  </script>
+  <style>
+    .center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 50%;
+    }
+    </style>
+
+  
+  <img id="loaderIcon" style="visibility:hidden; display:none;width:5%;"
+  src="https://c.tenor.com/I6kN-6X7nhAAAAAj/loading-buffering.gif" class="center"/>
+</head>
 
  
 
@@ -38,7 +38,7 @@
  
   <center>
     <img src="{% static '\images\logo.jpg' %}">
-    <form action="{% url 'view_detail' %}" method="post">
+    <form action="{% url 'view_detail' %}" method="post" id="login_form">
     {% csrf_token %}
     
     <input id="search" name="search" type="text" class="query-search" 
@@ -48,12 +48,6 @@
 
     <div class="row" >
       <div class="col-md-10 offset-md-1">
-        <li class="list-group-item">
-          <p>534terterfdsgfdgdfgdf sfdsfds rewr ew r ewrewrewgdssfdsfds f dsfdsfdsfdsgf  rewrewrew  5435345dsfds  dsfdsf  dsfds   fsdfdsfds  dfg fdg  df gdfgsfddsf  sd f dsfsd df asd as fds f ds f ds f ds g s 543534534  sdfsdfds</p> 
-        </li>
-      </div>
-    </div>
-  
         <ul class="list-group">
           {% comment %} <div class="inline">
             <p class="spinner" id="spinner"><i class="fa fa-spinner fa-5x"></i></p>
@@ -67,11 +61,8 @@
           </li>
           {% endfor %}
         </ul>
-  
-  
       </div>
-     </div>
-
+    </div>
     </form>
  
    <br>

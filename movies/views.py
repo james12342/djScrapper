@@ -147,9 +147,11 @@ def home(request):
     return render(request, "movies/home.html", {'movies': movies})
 @csrf_exempt 
 def sreach_view(request):
+       
     if request.method == "POST":
+        movies = ['']
         searchWord = request.POST.get('search','')
-        print(searchWord)
+        print("you enter keyword:"+searchWord)
         if len(searchWord)>0:
             data = ['','','','']
             header = ['Company','Person Name', 'Email', 'Phone']
@@ -264,6 +266,9 @@ def sreach_view(request):
             # to close the browser
             driver.close()
         #movies = ['123']
-        print(movies)
+        
+            print(movies)
+        else:
+         movies = ['']
        
     return render(request, "movies/home.html", {'movies': movies })
