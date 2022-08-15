@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<head>
+  <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ 
+     <style>
+         #spinner   {  
+            
+             animation: spin 1s linear infinite;
+             color:red;
+         }
+           
+         @keyframes spin {
+             100% {
+                 transform: rotate(360deg);
+             }
+         }
+ .inline{
+     display: flex;
+ }
+ .spinner i{
+     margin-top: 10px;
+     margin-left: 50px;
+ }
+     </style>
+ </head>
+
+ 
+
+
+<div class="container">
+
+  <h1 class='text-center'>Lei Gong Ma Person Data Hub</h1>
+
+ 
+  <center>
+    <img src="{% static '\images\logo.jpg' %}">
+    <form action="{% url 'view_detail' %}" method="post">
+    {% csrf_token %}
+    
+    <input id="search" name="search" type="text" class="query-search" 
+     placeholder="Enter the key word..." size="50">
+    <input class="btn btn-primary" type="submit" value="Search">
+
+
+    <div class="row" >
+      <div class="col-md-10 offset-md-1">
+        <li class="list-group-item">
+          <p>534terterfdsgfdgdfgdf sfdsfds rewr ew r ewrewrewgdssfdsfds f dsfdsfdsfdsgf  rewrewrew  5435345dsfds  dsfdsf  dsfds   fsdfdsfds  dfg fdg  df gdfgsfddsf  sd f dsfsd df asd as fds f ds f ds f ds g s 543534534  sdfsdfds</p> 
+        </li>
+      </div>
+    </div>
+  
+        <ul class="list-group">
+          {% comment %} <div class="inline">
+            <p class="spinner" id="spinner"><i class="fa fa-spinner fa-5x"></i></p>
+          </div> {% endcomment %}
+          
+          {% for movie in movies %}
+          
+          
+          <li class="list-group-item">
+            <p>{{ movie }}</p> 
+          </li>
+          {% endfor %}
+        </ul>
+  
+  
+      </div>
+     </div>
+
+    </form>
+ 
+   <br>
+
+  
+  
+ </center>
+
+</div>
+
+<script>
+
+  function setGetParameter(){
+    alert("here");
+      var search_word = $("#search").val();
+      $.ajax({
+        type: "POST",
+        url: {% url 'view_detail' %},
+        data: search_word,
+        success: function(result){
+          alert("Success");
+        }
+      });
+  }
+
+  function loading(){
+    if(loading==0) {
+      spinner.classList.add('active');
+    } else if(loading==100){
+      clearInterval(id);
+      window.open("welcome.html","_self");
+      spinner.classList.remove('active');
+    } else {
+      loading = loading + 1;
+      if(loading==90){
+        spinner.style.animation ="fadeout 1s ease";
+      }
+    }
+}
+
+
+</script>
+
+
+{% endblock %}
+
+
+  
