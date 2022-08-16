@@ -228,7 +228,8 @@ def sreach_view(request):
                 except NoSuchElementException:        
                     print("Oops! first page no more result #########################################################")
                     pagenum=0
-                    
+                    if len(movies)==0:
+                        movies = ['No data found']
                     break
             
                 driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
