@@ -32,6 +32,9 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from subprocess import CREATE_NO_WINDOW
 
+
+
+
 service = Service('C:\work\git\scrape-linkedin-selenium/chromedriver.exe')
 service.creationflags = CREATE_NO_WINDOW
 
@@ -150,6 +153,8 @@ def sreach_view(request):
        
     if request.method == "POST":
         movies = ['']
+        pagenum = 0
+        
         searchWord = request.POST.get('search','')
         print("you enter keyword:"+searchWord)
         if len(searchWord)>0:
@@ -165,7 +170,7 @@ def sreach_view(request):
             # declare variable to store search term
             search_term="site:www.linkedin.com/in/ AND \""+searchWord+"\" \"profile\" \"phone\" \"gmail\""
             
-            search_term="site:twitter.com -site:m.twitter.com intitle:”on Twitter” "+searchWord+"  gmail"
+            #search_term="site:twitter.com -site:m.twitter.com intitle:”on Twitter” "+searchWord+"  gmail"
             
             # -- Pre - Condition --
             # declare and initialize driver variable
@@ -195,6 +200,7 @@ def sreach_view(request):
             # to search for the entered search term
             searchTextBox.send_keys(Keys.RETURN)
             movies = []
+            
             for i in range(10):
                 try:
                     searchTitle = driver.find_element(By.XPATH, "//*[@id=\"rso\"]/div["+str(i+1)+"]/div/div/div[1]/div/a/h3").text.replace("- LinkedIn","").replace("LinkedIn","")
@@ -215,52 +221,61 @@ def sreach_view(request):
                     data[2]=searchGmail
                     data[3]=m
                     movies.append(str(i)+":"+searchWord+"-"+searchTitle+"|Email:"+str(searchGmail)+"|Phone:"+str(m))
-                    with open('personData.csv', 'a', encoding='UTF8') as f:
+                    with open(searchWord+'_personData.csv', 'a', encoding='UTF8') as f:
                         writer = csv.writer(f)
                     
                         writer.writerow(data)
                 except NoSuchElementException:        
-                    print("Oops! no more result #########################################################")
+                    print("Oops! first page no more result #########################################################")
+                    pagenum=0
+                    
                     break
             
-            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            try:
+                driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                try:
                  driver.find_element(By.XPATH, "//*[@id=\"botstuff\"]/div/div[3]/table/tbody/tr/td[3]/a").click()
-            except NoSuchElementException:        
-                 print("Oops! no more click #########################################################")
-                 driver.close()
-            
-            print("Click next page")
-            for i_p in range (8):
-                
-                for i in range(10):
-                    try:
-                        searchTitle = driver.find_element(By.XPATH, "//*[@id=\"rso\"]/div["+str(i+1)+"]/div/div/div[1]/div/a/h3").text.replace("- LinkedIn","").replace("LinkedIn","")
-                        searchContent=driver.find_element(By.XPATH, "//*[@id=\"rso\"]/div["+str(i+1)+"]/div/div/div[2]").text.replace("LinkedIn","")       
-                        searchGmail = re.findall('\S+@\S+', searchContent)     
-                        # extracting the mobile number
-                        m=re.findall(r'[\+\(]?[1-9][0-9 .\-\(\)]{8,}[0-9]', searchContent)
-                        print(str(8*i_p+i)+".Name:"+searchTitle)
-                        #print(str(8*i_p+i)+".Detail:"+ searchContent)
-                        print(str(8*i_p+i)+".Email:"+ str(searchGmail))
-                        print(str(8*i_p+i)+".Phone:"+ str(m))
-                        # write the data
-                        data[0]="chewy"
-                        data[1]=searchTitle
-                        data[2]=searchGmail
-                        data[3]=m
-                        movies.append(str(8*i_p+i)+":"+searchWord+"-"+searchTitle+"|Email:"+str(searchGmail)+"|Phone:"+str(m))
-                        with open('personData.csv', 'a', encoding='UTF8') as f:
-                            writer = csv.writer(f)
-                            
-                            writer.writerow(data)
-                    except NoSuchElementException:        
-                        print("Oops! no more result #########################################################")
-                        break
+                except NoSuchElementException:        
+                 print("Oops! first page no more click #########################################################")
+                 
+                 break
+            if pagenum>0:
+                print("Click next page")
+                for i_p in range (4):
                     
-
-            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            driver.find_element(By.XPATH, "//*[@id=\"botstuff\"]/div/div[3]/table/tbody/tr/td["+str(i_p+4)+"]/a").click()
+                    for i in range(10):
+                        try:
+                            searchTitle = driver.find_element(By.XPATH, "//*[@id=\"rso\"]/div["+str(i+1)+"]/div/div/div[1]/div/a/h3").text.replace("- LinkedIn","").replace("LinkedIn","")
+                            searchContent=driver.find_element(By.XPATH, "//*[@id=\"rso\"]/div["+str(i+1)+"]/div/div/div[2]").text.replace("LinkedIn","")       
+                            searchGmail = re.findall('\S+@\S+', searchContent)     
+                            # extracting the mobile number
+                            m=re.findall(r'[\+\(]?[1-9][0-9 .\-\(\)]{8,}[0-9]', searchContent)
+                            print(str(8*i_p+i)+".Name:"+searchTitle)
+                            #print(str(8*i_p+i)+".Detail:"+ searchContent)
+                            print(str(8*i_p+i)+".Email:"+ str(searchGmail))
+                            print(str(8*i_p+i)+".Phone:"+ str(m))
+                            # write the data
+                            data[0]=searchWord
+                            data[1]=searchTitle
+                            data[2]=searchGmail
+                            data[3]=m
+                            movies.append(str(8*i_p+i)+":"+searchWord+"-"+searchTitle+"|Email:"+str(searchGmail)+"|Phone:"+str(m))
+                            with open(searchWord+'_personData.csv', 'a', encoding='UTF8') as f:
+                                writer = csv.writer(f)
+                                
+                                writer.writerow(data)
+                        except NoSuchElementException:        
+                            print("Oops! no more result #########################################################")
+                            break
+                        
+                    try:
+                        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+                        driver.find_element(By.XPATH, "//*[@id=\"botstuff\"]/div/div[3]/table/tbody/tr/td["+str(i_p+4)+"]/a").click()
+                    except NoSuchElementException:        
+                     print("Oops! no more click #########################################################")
+                    
+                     break
+                    
+           
 
             # -- Post - Condition --
             # to close the browser
