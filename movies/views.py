@@ -235,14 +235,14 @@ def sreach_view(request):
                  driver.find_element(By.XPATH, "//*[@id=\"botstuff\"]/div/div[3]/table/tbody/tr/td[3]/a").click()
                 except NoSuchElementException:        
                  print("Oops! first page no more click #########################################################")
-                 pagenum=0
+                 #pagenum=0
                  if len(movies)==0:
                         movies = ['No data found']
                  break
              
-            if pagenum>0:
+            # if pagenum>0:
                 print("Click next page")
-                for i_p in range (4):
+            for i_p in range (4):
                     
                     for i in range(10):
                         try:
