@@ -210,11 +210,11 @@ def sreach_view(request):
                     print(str(i)+".Email:"+ str(searchGmail))
                     print(str(i)+".Phone:"+ str(m))
                     # write the data
-                    data[0]="chewy"
+                    data[0]=searchWord
                     data[1]=searchTitle
                     data[2]=searchGmail
                     data[3]=m
-                    movies.append(str(i)+":"+searchTitle+"|Email:"+str(searchGmail)+"|Phone:"+str(m))
+                    movies.append(str(i)+":"+searchWord+"-"+searchTitle+"|Email:"+str(searchGmail)+"|Phone:"+str(m))
                     with open('personData.csv', 'a', encoding='UTF8') as f:
                         writer = csv.writer(f)
                     
@@ -249,7 +249,7 @@ def sreach_view(request):
                         data[1]=searchTitle
                         data[2]=searchGmail
                         data[3]=m
-                        movies.append(str(8*i_p+i)+":"+searchTitle+"|Email:"+str(searchGmail)+"|Phone:"+str(m))
+                        movies.append(str(8*i_p+i)+":"+searchWord+"-"+searchTitle+"|Email:"+str(searchGmail)+"|Phone:"+str(m))
                         with open('personData.csv', 'a', encoding='UTF8') as f:
                             writer = csv.writer(f)
                             
