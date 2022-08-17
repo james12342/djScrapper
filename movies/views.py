@@ -158,9 +158,9 @@ def sreach_view(request):
         searchWord = request.POST.get('search','')
         print("you enter keyword:"+searchWord)
         if len(searchWord)>0:
-            data = ['','','','']
-            header = ['Company','Person Name', 'Email', 'Phone']
-            with open('personData.csv', 'w', encoding='UTF8') as f:
+            data = ['','','','','']
+            header = ['Company','Person Name', 'Email', 'Phone','URL']
+            with open('./static/data/'+searchWord+'_personData.csv', 'w', encoding='UTF8') as f:
                 writer = csv.writer(f)
                 # write the header
                 writer.writerow(header)
@@ -210,18 +210,25 @@ def sreach_view(request):
                     # extracting the mobile number
                     
                     m=re.findall(r'[\+\(]?[1-9][0-9 .\-\(\)]{8,}[0-9]', searchContent)
+                    searchURL=driver.find_element(By.XPATH, "//*[@id=\"rso\"]/div["+str(i+1)+"]/div/div/div[1]/div/a/div/cite").text
+                    searchURL=searchURL.replace("›","/in/")
+                    searchURL=searchURL.replace(" ","")
+                    print("url--:"+driver.find_element(By.XPATH, "//*[@id=\"rso\"]/div["+str(i+1)+"]/div/div/div[1]/div/a").get_attribute('href'))
+                   
                     
                     print(str(i)+".Name:"+searchTitle)
                     #print(str(i)+".Detail:"+ searchContent)
                     print(str(i)+".Email:"+ str(searchGmail))
                     print(str(i)+".Phone:"+ str(m))
+                    print(str(i)+".Url:"+ str(searchURL))
                     # write the data
                     data[0]=searchWord
                     data[1]=searchTitle
                     data[2]=searchGmail
                     data[3]=m
-                    movies.append(str(i)+":"+searchWord+"-"+searchTitle+"|Email:"+str(searchGmail)+"|Phone:"+str(m))
-                    with open(searchWord+'_personData.csv', 'a', encoding='UTF8') as f:
+                    data[4]=searchURL
+                    movies.append(str(i)+":"+searchWord+"-"+searchTitle+"|Email:"+str(searchGmail)+"|Phone:"+str(m)+"|Url:"+searchURL)
+                    with open('./static/data/'+searchWord+'_personData.csv', 'a', encoding='UTF8') as f:
                         writer = csv.writer(f)
                     
                         writer.writerow(data)
@@ -251,17 +258,22 @@ def sreach_view(request):
                             searchGmail = re.findall('\S+@\S+', searchContent)     
                             # extracting the mobile number
                             m=re.findall(r'[\+\(]?[1-9][0-9 .\-\(\)]{8,}[0-9]', searchContent)
+                            searchURL=driver.find_element(By.XPATH, "//*[@id=\"rso\"]/div["+str(i+1)+"]/div/div/div[1]/div/a/div/cite").text
+                            searchURL=searchURL.replace("›","/in/")
+                            searchURL=searchURL.replace(" ","")
                             print(str(8*i_p+i)+".Name:"+searchTitle)
                             #print(str(8*i_p+i)+".Detail:"+ searchContent)
                             print(str(8*i_p+i)+".Email:"+ str(searchGmail))
                             print(str(8*i_p+i)+".Phone:"+ str(m))
+                            print(str(8*i_p+i)+".Url:"+ str(searchURL))
                             # write the data
                             data[0]=searchWord
                             data[1]=searchTitle
                             data[2]=searchGmail
                             data[3]=m
-                            movies.append(str(8*i_p+i)+":"+searchWord+"-"+searchTitle+"|Email:"+str(searchGmail)+"|Phone:"+str(m))
-                            with open(searchWord+'_personData.csv', 'a', encoding='UTF8') as f:
+                            data[4]=searchURL
+                            movies.append(str(8*i_p+i)+":"+searchWord+"-"+searchTitle+"|Email:"+str(searchGmail)+"|Phone:"+str(m)+"|Url:"+searchURL)
+                            with open('./static/data/'+searchWord+'_personData.csv', 'a', encoding='UTF8') as f:
                                 writer = csv.writer(f)
                                 
                                 writer.writerow(data)
@@ -288,4 +300,4 @@ def sreach_view(request):
         else:
          movies = ['']
        
-    return render(request, "movies/home.html", {'movies': movies })
+    return render(request, "movies/home.html", {'movies': movies ,'searchValue':searchWord})

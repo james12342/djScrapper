@@ -44,8 +44,13 @@
     <input id="search" name="search" type="text" class="query-search" 
      placeholder="Enter the key word..." size="50">
     <input class="btn btn-primary" type="submit" value="Search">
-
-
+  
+    <br>
+    {% if searchValue %}
+    <a href="../static/data/{{ searchValue }}_personData.csv">Download data 
+    </a>
+    {% endif %}
+   
     <div class="row" >
       <div class="col-md-10 offset-md-1">
         <ul class="list-group">
